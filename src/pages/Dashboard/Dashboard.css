@@ -1,0 +1,148 @@
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main-content {
+  margin-left: 240px;
+  padding: 2rem;
+  flex: 1;
+  background: var(--bg-light);
+}
+
+.page-header {
+  margin-bottom: 1.5rem;
+}
+
+.page-header h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.page-header p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-card {
+  background: var(--bg-white);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  box-shadow: var(--shadow);
+  border-left: 4px solid transparent;
+}
+
+.stat-card.earned { border-left-color: var(--success); }
+.stat-card.pending { border-left-color: #007bff; }
+.stat-card.overdue { border-left-color: var(--danger); }
+.stat-card.total { border-left-color: var(--primary); }
+
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-top: 6px;
+  color: var(--text-primary);
+}
+
+.chart-section {
+  background: var(--bg-white);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+  margin-bottom: 1.5rem;
+}
+
+.chart-section h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.chart-wrapper {
+  width: 100%;
+}
+
+.empty-chart {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.recent-section {
+  background: var(--bg-white);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+}
+
+.recent-section h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.invoice-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.invoice-table th {
+  text-align: left;
+  padding: 0.65rem 1rem;
+  background: var(--bg-light);
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.invoice-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-primary);
+}
+
+.status-badge {
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+
+.status-badge.draft { background: #f0f0f0; color: #6c757d; }
+.status-badge.sent { background: #e8f0fe; color: #007bff; }
+.status-badge.paid { background: #e6f9f0; color: #28a745; }
+.status-badge.overdue { background: #fdecea; color: #dc3545; }
+
+.empty-text {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  font-size: 1rem;
+  color: var(--text-secondary);
+}

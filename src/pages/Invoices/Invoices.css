@@ -1,0 +1,250 @@
+.invoice-filters {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.search-input {
+  padding: 0.65rem 0.9rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  outline: none;
+  min-width: 260px;
+  transition: border-color 0.2s;
+}
+
+.search-input:focus {
+  border-color: var(--primary);
+}
+
+.status-filters {
+  display: flex;
+  gap: 6px;
+}
+
+.filter-btn {
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  border: 1.5px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  transition: all 0.2s;
+}
+
+.filter-btn.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.clickable-row {
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.clickable-row:hover {
+  background: var(--bg-light);
+}
+
+.status-select {
+  padding: 4px 8px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  font-size: 0.82rem;
+  outline: none;
+  cursor: pointer;
+}
+
+.invoice-modal {
+  max-width: 580px;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+.items-section {
+  margin-bottom: 1rem;
+}
+
+.items-section label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.item-row {
+  display: grid;
+  grid-template-columns: 2fr 0.6fr 0.8fr 0.8fr 0.3fr;
+  gap: 6px;
+  margin-bottom: 6px;
+  align-items: center;
+}
+
+.item-row input {
+  padding: 0.5rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 0.85rem;
+  outline: none;
+}
+
+.item-row input:focus {
+  border-color: var(--primary);
+}
+
+.item-total {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.remove-item {
+  background: none;
+  color: var(--danger);
+  font-size: 0.85rem;
+  padding: 2px;
+}
+
+.add-item-btn {
+  background: none;
+  color: var(--primary);
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 4px 0;
+  margin-top: 4px;
+}
+
+.invoice-summary {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.invoice-summary .form-group {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.totals {
+  flex: 1;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.totals p {
+  margin-bottom: 4px;
+}
+
+.total-line {
+  color: var(--text-primary) !important;
+  font-size: 1rem !important;
+  margin-top: 6px;
+}
+
+.form-group select {
+  padding: 0.65rem 0.9rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 0.95rem;
+  outline: none;
+  background: var(--bg-white);
+}
+
+.invoice-detail {
+  max-width: 520px;
+}
+
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.25rem;
+}
+
+.detail-header h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.close-btn {
+  background: none;
+  font-size: 1rem;
+  color: var(--text-secondary);
+}
+
+.detail-client {
+  background: var(--bg-light);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+}
+
+.detail-client p {
+  margin-bottom: 4px;
+  color: var(--text-primary);
+}
+
+.items-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+.items-table th {
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg-light);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.items-table td {
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.detail-totals {
+  text-align: right;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.detail-totals p {
+  margin-bottom: 4px;
+}
+
+.detail-notes {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  margin-bottom: 1rem;
+}
+
+.btn-delete-inv {
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--radius);
+  background: #fdecea;
+  color: var(--danger);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.btn-secondary {
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--radius);
+  background: var(--bg-light);
+  color: var(--primary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: 1.5px solid var(--primary);
+}
