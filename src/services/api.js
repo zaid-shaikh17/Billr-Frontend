@@ -15,6 +15,7 @@ api.interceptors.request.use((config) => {
 // Auth
 export const registerUser = (data) => api.post('/api/auth/register', data)
 export const loginUser = (data) => api.post('/api/auth/login', data)
+export const updateProfile = (data) => api.put('/api/auth/profile', data)
 
 // Clients
 export const fetchClients = () => api.get('/api/clients')

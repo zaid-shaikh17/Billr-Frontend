@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import Login from './pages/Login/Login'
 import Register from './pages/Register/Register'
+import Profile from './pages/Profile/Profile'
 import Dashboard from './pages/Dashboard/Dashboard'
 import Clients from './pages/Clients/Clients'
 import Invoices from './pages/Invoices/Invoices'
@@ -14,6 +15,7 @@ function App() {
       <Routes>
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
+        <Route path='/profile' element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path='/' element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path='/clients' element={<ProtectedRoute><Clients /></ProtectedRoute>} />
         <Route path='/invoices' element={<ProtectedRoute><Invoices /></ProtectedRoute>} />

@@ -36,6 +36,9 @@ const Sidebar = () => {
         <NavLink to='/invoices' className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
           Invoices
         </NavLink>
+        <NavLink to='/profile' className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+         Profile
+        </NavLink>
       </nav>
 
       <button className='logout-btn' onClick={handleLogout}>
