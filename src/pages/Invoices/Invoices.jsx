@@ -230,11 +230,14 @@ const Invoices = () => {
                         handleStatusChange(inv._id, e.target.value)
                       }
                     >
-                      {["Draft", "Sent", "Paid", "Overdue"].map((s) => (
-                        <option key={s} value={s}>
-                          {s}
-                        </option>
-                      ))}
+                      <option value="Draft">Draft</option>
+                      <option value="Sent" disabled>
+                        Sent
+                      </option>
+                      <option value="Paid">Paid</option>
+                      <option value="Overdue" disabled>
+                        Overdue
+                      </option>
                     </select>
                   </td>
                 </tr>

@@ -52,6 +52,13 @@
   padding: 1.25rem;
   box-shadow: var(--shadow);
   display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  position: relative;
+}
+
+.client-top {
+  display: flex;
   gap: 1rem;
   align-items: flex-start;
 }
@@ -97,8 +104,10 @@
 
 .client-actions {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  flex-direction: row;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: auto;
 }
 
 .btn-edit {
