@@ -35,3 +35,15 @@ button {
   border: none;
   outline: none;
 }
+
+@media (max-width: 768px) {
+  .layout {
+    display: block;
+  }
+
+  .main-content {
+    margin-left: 0 !important;
+    padding: 1rem;
+    padding-top: 4rem;
+  }
+}

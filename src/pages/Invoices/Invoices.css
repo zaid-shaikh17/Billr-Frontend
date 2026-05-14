@@ -248,3 +248,47 @@
   font-weight: 500;
   border: 1.5px solid var(--primary);
 }
+
+
+@media (max-width: 768px) {
+  .invoice-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .invoice-filters {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .search-input {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .invoice-modal {
+    max-width: 95vw;
+    max-height: 90vh;
+  }
+
+  .item-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+
+  }
+
+  .invoice-summary {
+    flex-direction: column;
+  }
+
+  .modal {
+    max-width: 95vw;
+    margin: 1rem;
+    z-index: 199;
+  }
+
+  .status-filters {
+    flex-wrap: wrap;
+  }
+}

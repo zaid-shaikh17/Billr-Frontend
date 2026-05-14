@@ -53,3 +53,19 @@
   padding: 0.65rem 1.5rem;
   margin-top: 0.5rem;
 }
+
+
+@media (max-width: 480px) {
+  .profile-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .profile-meta h3 {
+    font-size: 1rem;
+  }
+
+  .profile-meta p {
+    font-size: 0.8rem;
+  }
+}
