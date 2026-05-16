@@ -79,121 +79,118 @@ const Dashboard = () => {
   if (loading) return <div className="loading">Loading...</div>;
 
   return (
-    <div className="layout">
-      <Sidebar />
-      <main className="main-content">
-        <div className="page-header">
-          <h2>Welcome back, {user?.name} 👋</h2>
-          <p>Here's your business overview</p>
-        </div>
+    <>
+      <div className="page-header">
+        <h2>Welcome back, {user?.name} 👋</h2>
+        <p>Here's your business overview</p>
+      </div>
 
-        <div className="stats-grid">
-          <div className="stat-card earned">
-            <p className="stat-label">Total Earned</p>
-            <h3 className="stat-value">{formatCurrency(totalEarned)}</h3>
-          </div>
-          <div className="stat-card pending">
-            <p className="stat-label">Pending</p>
-            <h3 className="stat-value">{formatCurrency(totalPending)}</h3>
-          </div>
-          <div className="stat-card overdue">
-            <p className="stat-label">Overdue</p>
-            <h3 className="stat-value">{formatCurrency(totalOverdue)}</h3>
-          </div>
-          <div className="stat-card total">
-            <p className="stat-label">Total Invoices</p>
-            <h3 className="stat-value">{invoices.length}</h3>
-          </div>
+      <div className="stats-grid">
+        <div className="stat-card earned">
+          <p className="stat-label">Total Earned</p>
+          <h3 className="stat-value">{formatCurrency(totalEarned)}</h3>
         </div>
-
-        <div className="chart-section">
-          <h3>Monthly Revenue</h3>
-          <div className="chart-wrapper">
-            {monthlyData.length > 0 ? (
-              <ResponsiveContainer width="100%" height={250}>
-                <BarChart data={monthlyData} barGap={10}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                  <XAxis dataKey="month" tick={{ fontSize: 12 }} />
-                  <YAxis tick={{ fontSize: 12 }} />
-                  <Tooltip
-                    formatter={(value, name) => [formatCurrency(value), name]}
-                    itemSorter={(item) => {
-                      const order = { Earned: 0, Pending: 1, Overdue: 2 };
-                      return order[item.name];
-                    }}
-                  />
-                  <Legend
-                    payload={[
-                      { value: "Earned", type: "square", color: "#6c63ff" },
-                      { value: "Pending", type: "square", color: "#74b9ff" },
-                      { value: "Overdue", type: "square", color: "#ff7675" },
-                    ]}
-                  />
-                  <Bar
-                    dataKey="earned"
-                    name="Earned"
-                    fill="#6c63ff"
-                    radius={[4, 4, 0, 0]}
-                  />
-                  <Bar
-                    dataKey="pending"
-                    name="Pending"
-                    fill="#74b9ff"
-                    radius={[4, 4, 0, 0]}
-                  />
-                  <Bar
-                    dataKey="overdue"
-                    name="Overdue"
-                    fill="#ff7675"
-                    radius={[4, 4, 0, 0]}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            ) : (
-              <div className="empty-chart">
-                No data yet. Create your first invoice.
-              </div>
-            )}
-          </div>
+        <div className="stat-card pending">
+          <p className="stat-label">Pending</p>
+          <h3 className="stat-value">{formatCurrency(totalPending)}</h3>
         </div>
+        <div className="stat-card overdue">
+          <p className="stat-label">Overdue</p>
+          <h3 className="stat-value">{formatCurrency(totalOverdue)}</h3>
+        </div>
+        <div className="stat-card total">
+          <p className="stat-label">Total Invoices</p>
+          <h3 className="stat-value">{invoices.length}</h3>
+        </div>
+      </div>
 
-        <div className="recent-section">
-          <h3>Recent Invoices</h3>
-          {invoices.length === 0 ? (
-            <p className="empty-text">No invoices yet.</p>
+      <div className="chart-section">
+        <h3>Monthly Revenue</h3>
+        <div className="chart-wrapper">
+          {monthlyData.length > 0 ? (
+            <ResponsiveContainer width="100%" height={250}>
+              <BarChart data={monthlyData} barGap={10}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <XAxis dataKey="month" tick={{ fontSize: 12 }} />
+                <YAxis tick={{ fontSize: 12 }} />
+                <Tooltip
+                  formatter={(value, name) => [formatCurrency(value), name]}
+                  itemSorter={(item) => {
+                    const order = { Earned: 0, Pending: 1, Overdue: 2 };
+                    return order[item.name];
+                  }}
+                />
+                <Legend
+                  payload={[
+                    { value: "Earned", type: "square", color: "#6c63ff" },
+                    { value: "Pending", type: "square", color: "#74b9ff" },
+                    { value: "Overdue", type: "square", color: "#ff7675" },
+                  ]}
+                />
+                <Bar
+                  dataKey="earned"
+                  name="Earned"
+                  fill="#6c63ff"
+                  radius={[4, 4, 0, 0]}
+                />
+                <Bar
+                  dataKey="pending"
+                  name="Pending"
+                  fill="#74b9ff"
+                  radius={[4, 4, 0, 0]}
+                />
+                <Bar
+                  dataKey="overdue"
+                  name="Overdue"
+                  fill="#ff7675"
+                  radius={[4, 4, 0, 0]}
+                />
+              </BarChart>
+            </ResponsiveContainer>
           ) : (
-            <table className="invoice-table">
-              <thead>
-                <tr>
-                  <th>Invoice</th>
-                  <th>Client</th>
-                  <th>Amount</th>
-                  <th>Due Date</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {invoices.slice(0, 5).map((inv) => (
-                  <tr key={inv._id}>
-                    <td>{inv.invoiceNumber}</td>
-                    <td>{inv.clientId?.name || "N/A"}</td>
-                    <td>{formatCurrency(inv.total)}</td>
-                    <td>{formatDate(inv.dueDate)}</td>
-                    <td>
-                      <span
-                        className={`status-badge ${inv.status.toLowerCase()}`}
-                      >
-                        {inv.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <div className="empty-chart">
+              No data yet. Create your first invoice.
+            </div>
           )}
         </div>
-      </main>
-    </div>
+      </div>
+
+      <div className="recent-section">
+        <h3>Recent Invoices</h3>
+        {invoices.length === 0 ? (
+          <p className="empty-text">No invoices yet.</p>
+        ) : (
+          <table className="invoice-table">
+            <thead>
+              <tr>
+                <th>Invoice</th>
+                <th>Client</th>
+                <th>Amount</th>
+                <th>Due Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {invoices.slice(0, 5).map((inv) => (
+                <tr key={inv._id}>
+                  <td>{inv.invoiceNumber}</td>
+                  <td>{inv.clientId?.name || "N/A"}</td>
+                  <td>{formatCurrency(inv.total)}</td>
+                  <td>{formatDate(inv.dueDate)}</td>
+                  <td>
+                    <span
+                      className={`status-badge ${inv.status.toLowerCase()}`}
+                    >
+                      {inv.status}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </>
   );
 };
 

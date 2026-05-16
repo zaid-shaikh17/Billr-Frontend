@@ -97,6 +97,8 @@
 .nav-item.active {
   background: var(--primary);
   color: white;
+  /* font-weight: 600; */
+  font-size: 1rem;
 }
 
 .logout-btn {
