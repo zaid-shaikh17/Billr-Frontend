@@ -15,11 +15,22 @@ const Sidebar = () => {
 
   const closeMenu = () => setIsOpen(false)
 
+  const NavItem = ({ to, end, children }) => (
+  <NavLink
+    to={to}
+    end={end}
+    className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
+    onClick={closeMenu}
+  >
+    {children}
+  </NavLink>
+)
+
   return (
     <>
       <button className='hamburger' onClick={() => setIsOpen(!isOpen)}>☰</button>
 
-      {isOpen && <div className='sidebar-overlay' onClick={closeMenu}></div>}
+        {isOpen && <div className='sidebar-overlay' onClick={closeMenu}></div>}
 
       <div className={`sidebar ${isOpen ? 'sidebar-open' : ''}`}>
         <button className='close-sidebar' onClick={closeMenu}>x</button>
@@ -37,20 +48,11 @@ const Sidebar = () => {
         </div>
 
         <nav className='sidebar-nav'>
-          <NavLink to='/' end className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
-            Dashboard
-          </NavLink>
-          <NavLink to='/clients' className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
-            Clients
-          </NavLink>
-          <NavLink to='/invoices' className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
-            Invoices
-          </NavLink>
-          <NavLink to='/profile' className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
-          Profile
-          </NavLink>
+          <NavItem to='/' end>Dashboard</NavItem>
+          <NavItem to='/clients'>Clients</NavItem>
+          <NavItem to='/invoices'>Invoices</NavItem>
+          <NavItem to='/profile'>Profile</NavItem>
         </nav>
-
         <button className='logout-btn' onClick={handleLogout}>
           Logout
         </button>
