@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { useAuth } from "../../context/AuthContext";
@@ -47,7 +47,7 @@ const Invoices = () => {
     loadData();
   }, [user]);
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       const [invRes, cliRes] = await Promise.all([
         fetchInvoices(),
@@ -60,7 +60,7 @@ const Invoices = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const handleItemChange = (index, field, value) => {
     const updated = [...formData.items];
@@ -86,7 +86,8 @@ const Invoices = () => {
 
   const getSubtotal = () =>
     formData.items.reduce((sum, item) => sum + item.quantity * item.rate, 0);
-  const getTotal = () => getSubtotal() + (getSubtotal() * formData.tax) / 100;
+  const getTotal = useMemo(() => getSubtotal() + (getSubtotal() * formData.tax) / 100
+  , [formData.items, formData.tax]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -107,7 +108,7 @@ const Invoices = () => {
     }
   };
 
-  const handleStatusChange = async (id, status) => {
+  const handleStatusChange = useCallback(async (id, status) => {
     try {
       const { data } = await updateInvoiceStatus(id, status);
       if (data.success) {
@@ -119,9 +120,9 @@ const Invoices = () => {
     } catch (error) {
       toast.error("Something went wrong");
     }
-  };
+  }, [invoices]);
 
-  const handleDelete = async (id) => {
+  const handleDelete = useCallback(async (id) => {
     if (!window.confirm("Delete this invoice?")) return;
     try {
       const { data } = await removeInvoice(id);
@@ -133,20 +134,21 @@ const Invoices = () => {
     } catch (error) {
       toast.error("Something went wrong");
     }
-  };
+  }, [invoices]);
 
   const closeModal = () => {
     setShowModal(false);
     setFormData(emptyForm);
   };
 
-  const filtered = invoices.filter((inv) => {
+  const filtered = useMemo(() => 
+  invoices.filter((inv) => {
     const matchSearch =
       inv.invoiceNumber.toLowerCase().includes(search.toLowerCase()) ||
       inv.clientId?.name?.toLowerCase().includes(search.toLowerCase());
     const matchStatus = statusFilter === "All" || inv.status === statusFilter;
     return matchSearch && matchStatus;
-  });
+  }), [invoices, search, statusFilter]);
 
   if (loading) return <div className="loading">Loading...</div>;
 
@@ -242,7 +244,7 @@ const Invoices = () => {
         </table>
       )}
 
-      {/* Create Invoice Modal */}
+      {/* Invoice Modal */}
       {showModal && (
         <div className="modal-overlay" onClick={closeModal}>
           <div

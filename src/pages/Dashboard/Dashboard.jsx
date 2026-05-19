@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import {
@@ -31,7 +31,7 @@ const Dashboard = () => {
     loadInvoices();
   }, [user]);
 
-  const loadInvoices = async () => {
+  const loadInvoices = useCallback(async () => {
     try {
       const { data } = await fetchInvoices();
       if (data.success) setInvoices(data.invoices);
@@ -40,21 +40,28 @@ const Dashboard = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const totalEarned = invoices
-    .filter((inv) => inv.status === "Paid")
-    .reduce((sum, inv) => sum + inv.total, 0);
+  const totalEarned = useMemo(() => 
+    invoices.filter((inv) => inv.status === "Paid")
+      .reduce((sum, inv) => sum + inv.total, 0),
+    [invoices]
+  );
 
-  const totalPending = invoices
-    .filter((inv) => inv.status === "Sent")
-    .reduce((sum, inv) => sum + inv.total, 0);
+  const totalPending = useMemo(() =>
+  invoices.filter((inv) => inv.status === "Sent")
+    .reduce((sum, inv) => sum + inv.total, 0),
+  [invoices]
+  );
 
-  const totalOverdue = invoices
-    .filter((inv) => inv.status === "Overdue")
-    .reduce((sum, inv) => sum + inv.total, 0);
+  const totalOverdue = useMemo(() =>
+    invoices.filter((inv) => inv.status === "Overdue")
+      .reduce((sum, inv) => sum + inv.total, 0),
+    [invoices]
+  );
 
-  const monthlyData = invoices.reduce((acc, inv) => {
+  const monthlyData = useMemo(() => 
+    invoices.reduce((acc, inv) => {
     const month = new Date(inv.createdAt).toLocaleString("en-IN", {
       month: "short",
     });
@@ -74,7 +81,8 @@ const Dashboard = () => {
       });
     }
     return acc;
-  }, []);
+  }, []),
+  [invoices]);
 
   if (loading) return <div className="loading">Loading...</div>;
 

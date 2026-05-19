@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { useAuth } from "../../context/AuthContext";
@@ -31,7 +31,7 @@ const Clients = () => {
     loadClients();
   }, [user]);
 
-  const loadClients = async () => {
+  const loadClients =useCallback(async () => {
     try {
       const { data } = await fetchClients();
       if (data.success) setClients(data.clients);
@@ -40,7 +40,7 @@ const Clients = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -85,7 +85,7 @@ const Clients = () => {
     setShowModal(true);
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete =useCallback(async (id) => {
     if (!window.confirm("Delete this client?")) return;
     try {
       const { data } = await removeClient(id);
@@ -96,7 +96,7 @@ const Clients = () => {
     } catch (error) {
       toast.error("Something went wrong");
     }
-  };
+  }, [clients]);
 
   const closeModal = () => {
     setShowModal(false);
@@ -104,12 +104,13 @@ const Clients = () => {
     setFormData(emptyForm);
   };
 
-  const filtered = clients.filter(
+  const filtered = useMemo(() => 
+  clients.filter(
     (c) =>
       c.name.toLowerCase().includes(search.toLowerCase()) ||
       c.email.toLowerCase().includes(search.toLowerCase()) ||
       c.company.toLowerCase().includes(search.toLowerCase()),
-  );
+  ), [clients, search]);
 
   if (loading) return <div className="loading">Loading...</div>;
 

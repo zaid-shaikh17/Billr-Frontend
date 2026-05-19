@@ -1,17 +1,19 @@
+import './App.css'
 import { Routes, Route, Outlet, Navigate } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import { useAuth } from './context/AuthContext'
 import Login from './pages/Login/Login'
 import Register from './pages/Register/Register'
-import Dashboard from './pages/Dashboard/Dashboard'
-import Clients from './pages/Clients/Clients'
-import Invoices from './pages/Invoices/Invoices'
-import Profile from './pages/Profile/Profile'
+const Dashboard = lazy(() => import('./pages/Dashboard/Dashboard'))
+const Clients = lazy(() => import('./pages/Clients/Clients'))
+const Invoices = lazy(() => import('./pages/Invoices/Invoices'))
+const Profile = lazy(() => import('./pages/Profile/Profile'))
 import Layout from './components/Layout/Layout'
+import { lazy, Suspense } from 'react'
 
 const ProtectedLayout = () => {
   const { user, loading } = useAuth()
-  if (loading) return <div className='loading'>Loading...</div>
+  if(loading) return <div className='loading'>Loading...</div>
   if (!user) return <Navigate to='/login' replace />
   return (
     <Layout>
@@ -24,6 +26,7 @@ function App() {
   return (
     <>
       <Toaster position='top-right' />
+      <Suspense fallback={<div className='loading'>Loading...</div>}>
       <Routes>
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
@@ -34,6 +37,7 @@ function App() {
           <Route path='/profile' element={<Profile />} />
         </Route>
       </Routes>
+      </Suspense>
     </>
   )
 }
