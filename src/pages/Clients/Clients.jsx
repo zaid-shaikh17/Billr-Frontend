@@ -23,6 +23,7 @@ const Clients = () => {
   const [search, setSearch] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
+
   useEffect(() => {
     if (!user) {
       navigate("/login");
@@ -85,7 +86,7 @@ const Clients = () => {
     setShowModal(true);
   };
 
-  const handleDelete =useCallback(async (id) => {
+  const handleDelete = useCallback(async (id) => {
     if (!window.confirm("Delete this client?")) return;
     try {
       const { data } = await removeClient(id);
@@ -146,7 +147,7 @@ const Clients = () => {
         <div className="clients-grid">
           {filtered.map((client) => (
             <div key={client._id} className="client-card">
-              <div className="client-top">
+              <div className="client-top" onClick={() => navigate(`/clients/${client._id}`)} style={{ cursor: "pointer" }}>
                 <div className="client-avatar">
                   {client.name.charAt(0).toUpperCase()}
                 </div>

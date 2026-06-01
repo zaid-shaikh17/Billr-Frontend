@@ -8,6 +8,7 @@ const Dashboard = lazy(() => import('./pages/Dashboard/Dashboard'))
 const Clients = lazy(() => import('./pages/Clients/Clients'))
 const Invoices = lazy(() => import('./pages/Invoices/Invoices'))
 const Profile = lazy(() => import('./pages/Profile/Profile'))
+const ClientDetail = lazy(() => import('./pages/ClientDetail/ClientDetail'))
 import Layout from './components/Layout/Layout'
 import { lazy, Suspense } from 'react'
 
@@ -35,6 +36,7 @@ function App() {
           <Route path='/clients' element={<Clients />} />
           <Route path='/invoices' element={<Invoices />} />
           <Route path='/profile' element={<Profile />} />
+          <Route path='/clients/:id' element={<ClientDetail />} />
         </Route>
       </Routes>
       </Suspense>
