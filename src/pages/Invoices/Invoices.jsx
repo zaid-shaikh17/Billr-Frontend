@@ -152,8 +152,8 @@ const Invoices = () => {
 
   if (loading) return <div className="loading">Loading...</div>;
 
-  return (
-    <>
+  return (  
+    <div className="invoices-page">
       <div className="page-header">
         <div>
           <h2>Invoices</h2>
@@ -349,7 +349,7 @@ const Invoices = () => {
                     </strong>
                   </p>
                   <p className="total-line">
-                    Total: <strong>{formatCurrency(getTotal())}</strong>
+                    Total: <strong>{formatCurrency(getTotal)}</strong>
                   </p>
                 </div>
               </div>
@@ -534,7 +534,7 @@ const Invoices = () => {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
