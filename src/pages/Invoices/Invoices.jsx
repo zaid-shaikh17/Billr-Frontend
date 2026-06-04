@@ -481,6 +481,8 @@ const Invoices = () => {
               <button
                 className="btn-secondary"
                 onClick={async () => {
+                  const confirm = window.confirm(`Send invoices ${showDetail.invoiceNumber} to ${showDetail.clientId?.email}?`);
+                  if (!confirm) return;
                   try {
                     const { data } = await sendEmail(showDetail._id);
                     if (data.success) {

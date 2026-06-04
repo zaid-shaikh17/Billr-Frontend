@@ -73,7 +73,7 @@
 }
 
 .btn-primary {
-  width: 100%;
+  width: auto;
   padding: 0.75rem;
   background: var(--primary);
   color: white;
