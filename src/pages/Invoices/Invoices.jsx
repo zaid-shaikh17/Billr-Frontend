@@ -7,6 +7,7 @@ import {
   fetchClients,
   createInvoice,
   updateInvoiceStatus,
+  editInvoice,
   removeInvoice,
   sendEmail,
 } from "../../services/api";
@@ -20,8 +21,9 @@ import "./Invoices.css";
 
 const emptyForm = {
   clientId: "",
-  items: [{ description: "", quantity: 1, rate: 0 }],
-  tax: 0,
+  clientName: "",
+  items: [{ description: "", quantity: 1, rate: "" }],
+  tax: "",
   dueDate: "",
   notes: "",
 };
@@ -35,6 +37,7 @@ const Invoices = () => {
   const [showModal, setShowModal] = useState(false);
   const [showDetail, setShowDetail] = useState(null);
   const [formData, setFormData] = useState(emptyForm);
+  const [editingInvoice, setEditingInvoice] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
@@ -72,9 +75,26 @@ const Invoices = () => {
   const addItem = () => {
     setFormData({
       ...formData,
-      items: [...formData.items, { description: "", quantity: 1, rate: 0 }],
+      items: [...formData.items, { description: "", quantity: 1, rate: "" }],
     });
   };
+
+const handleEdit = (inv) => {
+  setEditingInvoice(inv)
+  setFormData({
+    clientId: inv.clientId._id,
+    items: inv.items.map(item => ({
+      description: item.description,
+      quantity: item.quantity,
+      rate: item.rate
+    })),
+    tax: inv.tax,
+    dueDate: inv.dueDate.split('T')[0],
+    notes: inv.notes || ''
+  })
+  setShowModal(true)
+  setShowDetail(null)
+}
 
   const removeItem = (index) => {
     if (formData.items.length === 1) return;
@@ -90,23 +110,24 @@ const Invoices = () => {
   , [formData.items, formData.tax]);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSubmitting(true);
-    try {
-      const { data } = await createInvoice(formData);
-      if (data.success) {
-        setInvoices([data.invoice, ...invoices]);
-        toast.success("Invoice created");
-        closeModal();
-      } else {
-        toast.error(data.message);
-      }
-    } catch (error) {
-      toast.error("Something went wrong");
-    } finally {
-      setSubmitting(false);
-    }
-  };
+  e.preventDefault()
+  setSubmitting(true)
+  if (editingInvoice) {
+  const { data } = await editInvoice(editingInvoice._id, formData)
+  if (data.success) {
+    setInvoices(invoices.map(inv =>
+      inv._id === editingInvoice._id
+        ? { ...data.invoice, clientId: editingInvoice.clientId }
+        : inv
+    ))
+    toast.success('Invoice updated')
+    closeModal()
+  } else {
+    toast.error(data.message)
+  }
+  return
+}
+}
 
   const handleStatusChange = useCallback(async (id, status) => {
     try {
@@ -139,6 +160,7 @@ const Invoices = () => {
   const closeModal = () => {
     setShowModal(false);
     setFormData(emptyForm);
+    seteditingInvoice(null);
   };
 
   const filtered = useMemo(() => 
@@ -251,7 +273,7 @@ const Invoices = () => {
             className="modal invoice-modal"
             onClick={(e) => e.stopPropagation()}
           >
-            <h3>New Invoice</h3>
+            <h3>{editingInvoice ? "Edit Invoice" : "New Invoice"}</h3>
             <form onSubmit={handleSubmit}>
               <div className="form-group">
                 <label>Client</label>
@@ -327,6 +349,7 @@ const Invoices = () => {
                   <label>Tax (%)</label>
                   <input
                     type="number"
+                    placeholder="Tax (%)"
                     value={formData.tax}
                     onChange={(e) =>
                       setFormData({
@@ -390,7 +413,7 @@ const Invoices = () => {
                   className="btn-primary"
                   disabled={submitting}
                 >
-                  {submitting ? "Creating..." : "Create Invoice"}
+                  {submitting ? "Saving..." : editingInvoice ? "Update Invoice" : "Create Invoice"}
                 </button>
               </div>
             </form>
@@ -472,6 +495,14 @@ const Invoices = () => {
             )}
 
             <div className="modal-actions">
+              <button
+                className="btn-edit-inv"
+                onClick={() => {
+                  handleEdit(showDetail);
+                }}
+              >
+                Edit
+              </button>
               <button
                 className="btn-delete-inv"
                 onClick={() => handleDelete(showDetail._id)}

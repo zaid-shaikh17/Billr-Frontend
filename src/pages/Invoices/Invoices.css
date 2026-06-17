@@ -285,6 +285,16 @@
   margin-bottom: 1rem;
 }
 
+.btn-edit-inv {
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--radius);
+  background: var(--bg-light);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: 1px solid var(--border);
+}
+
 .btn-delete-inv {
   padding: 0.6rem 1.2rem;
   border-radius: var(--radius);
