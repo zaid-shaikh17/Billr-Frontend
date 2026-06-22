@@ -12,7 +12,7 @@ import {
   CartesianGrid,
 } from "recharts";
 import { useAuth } from "../../context/AuthContext";
-import { fetchInvoices } from "../../services/api";
+import { fetchInvoices, fetchClients } from "../../services/api";
 import { formatCurrency, formatDate } from "../../utils/helpers";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import "./Dashboard.css";
@@ -21,26 +21,35 @@ const Dashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [invoices, setInvoices] = useState([]);
+  const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!user) {
       navigate("/login");
-      return;
     }
-    loadInvoices();
-  }, [user]);
+  },[user, navigate]);
 
-  const loadInvoices = useCallback(async () => {
-    try {
-      const { data } = await fetchInvoices();
-      if (data.success) setInvoices(data.invoices);
-    } catch (error) {
-      toast.error("Failed to load invoices");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+
+const loadData = useCallback(async () => {
+  try {
+    const [invRes, cliRes] = await Promise.all([
+      fetchInvoices(),
+      fetchClients()
+    ])
+    if (invRes.data.success) setInvoices(invRes.data.invoices)
+    if (cliRes.data.success) setClients(cliRes.data.clients)
+  } catch (error) {
+    toast.error('Failed to load dashboard data')
+  } finally {
+    setLoading(false)
+  }
+}, [])
+
+useEffect(() => {
+  if (!user) return
+  loadData()
+}, [user, loadData])
 
   const totalEarned = useMemo(() => 
     invoices.filter((inv) => inv.status === "Paid")
@@ -85,6 +94,26 @@ const Dashboard = () => {
   [invoices]);
 
   if (loading) return <div className="loading">Loading...</div>;
+
+  const isNewUser = clients.length === 0 && invoices.length === 0
+
+if (isNewUser) {
+  return (
+    <div className='onboarding-wrapper'>
+      <div className='onboarding-card'>
+        <div className='onboarding-icon'>👋</div>
+        <h2>Welcome to Billr, {user?.name}</h2>
+        <p>Let's get you set up. Start by adding your first client.</p>
+        <button className='btn-primary' onClick={() => navigate('/clients')}>
+          + Add Your First Client
+        </button>
+        <p className='onboarding-hint'>
+          Once you have a client, you can create your first invoice and start tracking payments.
+        </p>
+      </div>
+    </div>
+  )
+}
 
   return (
     <>
