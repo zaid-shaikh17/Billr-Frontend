@@ -109,24 +109,38 @@ const handleEdit = (inv) => {
   const getTotal = useMemo(() => getSubtotal() + (getSubtotal() * formData.tax) / 100
   , [formData.items, formData.tax]);
 
-  const handleSubmit = async (e) => {
+const handleSubmit = async (e) => {
   e.preventDefault()
   setSubmitting(true)
-  if (editingInvoice) {
-  const { data } = await editInvoice(editingInvoice._id, formData)
-  if (data.success) {
-    setInvoices(invoices.map(inv =>
-      inv._id === editingInvoice._id
-        ? { ...data.invoice, clientId: editingInvoice.clientId }
-        : inv
-    ))
-    toast.success('Invoice updated')
-    closeModal()
-  } else {
-    toast.error(data.message)
+  try {
+    if (editingInvoice) {
+      const { data } = await editInvoice(editingInvoice._id, formData)
+      if (data.success) {
+        setInvoices(invoices.map(inv =>
+          inv._id === editingInvoice._id
+            ? { ...data.invoice, clientId: editingInvoice.clientId }
+            : inv
+        ))
+        toast.success('Invoice updated')
+        closeModal()
+      } else {
+        toast.error(data.message)
+      }
+    } else {
+      const { data } = await createInvoice(formData)
+      if (data.success) {
+        setInvoices([data.invoice, ...invoices])
+        toast.success('Invoice created')
+        closeModal()
+      } else {
+        toast.error(data.message)
+      }
+    }
+  } catch (error) {
+    toast.error('Something went wrong')
+  } finally {
+    setSubmitting(false)
   }
-  return
-}
 }
 
   const handleStatusChange = useCallback(async (id, status) => {
@@ -160,7 +174,7 @@ const handleEdit = (inv) => {
   const closeModal = () => {
     setShowModal(false);
     setFormData(emptyForm);
-    seteditingInvoice(null);
+    setEditingInvoice(null);
   };
 
   const filtered = useMemo(() => 

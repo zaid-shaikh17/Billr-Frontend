@@ -11,6 +11,7 @@ const Profile = () => {
     name: user?.name || "",
     businessName: user?.businessName || "",
     phone: user?.phone || "",
+    invoicePrefix: user?.invoicePrefix || "INV",
   });
   const [submitting, setSubmitting] = useState(false);
 
@@ -85,6 +86,17 @@ const Profile = () => {
               onChange={handleChange}
               placeholder="9876543210"
             />
+          </div>
+          <div className="form-group">
+            <label>Invoice Prefix</label>
+            <input
+              name="invoicePrefix"
+              value={formData.invoicePrefix}
+              onChange={handleChange}
+              placeholder="INV"
+              maxLength={6}
+            />
+            <p className="field-hint">Example: "{formData.invoicePrefix || 'INV'}-0001"</p>
           </div>
           <button className="btn-primary" type="submit" disabled={submitting}>
             {submitting ? "Saving..." : "Save Changes"}
