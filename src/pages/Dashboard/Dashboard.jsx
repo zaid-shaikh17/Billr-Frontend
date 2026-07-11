@@ -12,17 +12,15 @@ import {
   CartesianGrid,
 } from "recharts";
 import { useAuth } from "../../context/AuthContext";
-import { fetchInvoices, fetchClients } from "../../services/api";
 import { formatCurrency, formatDate } from "../../utils/helpers";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import "./Dashboard.css";
+import { useData } from '../../context/DataContext'
 
 const Dashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [invoices, setInvoices] = useState([]);
-  const [clients, setClients] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { invoices, clients, loadInvoices, loadClients, loadingInvoices } = useData()
 
   useEffect(() => {
     if (!user) {
@@ -31,71 +29,50 @@ const Dashboard = () => {
   },[user, navigate]);
 
 
-const loadData = useCallback(async () => {
-  try {
-    const [invRes, cliRes] = await Promise.all([
-      fetchInvoices(),
-      fetchClients()
-    ])
-    if (invRes.data.success) setInvoices(invRes.data.invoices)
-    if (cliRes.data.success) setClients(cliRes.data.clients)
-  } catch (error) {
-    toast.error('Failed to load dashboard data')
-  } finally {
-    setLoading(false)
-  }
-}, [])
+  useEffect(() => {
+    if (!user) return
+    loadInvoices()
+    loadClients()
+  }, [user])
 
-useEffect(() => {
-  if (!user) return
-  loadData()
-}, [user, loadData])
+const totalEarned = useMemo(() =>
+  (invoices || []).filter(inv => inv.status === 'Paid')
+    .reduce((sum, inv) => sum + inv.total, 0)
+, [invoices])
 
-  const totalEarned = useMemo(() => 
-    invoices.filter((inv) => inv.status === "Paid")
-      .reduce((sum, inv) => sum + inv.total, 0),
-    [invoices]
-  );
+const totalPending = useMemo(() =>
+  (invoices || []).filter(inv => inv.status === 'Sent')
+    .reduce((sum, inv) => sum + inv.total, 0)
+, [invoices])
 
-  const totalPending = useMemo(() =>
-  invoices.filter((inv) => inv.status === "Sent")
-    .reduce((sum, inv) => sum + inv.total, 0),
-  [invoices]
-  );
+const totalOverdue = useMemo(() =>
+  (invoices || []).filter(inv => inv.status === 'Overdue')
+    .reduce((sum, inv) => sum + inv.total, 0)
+, [invoices])
 
-  const totalOverdue = useMemo(() =>
-    invoices.filter((inv) => inv.status === "Overdue")
-      .reduce((sum, inv) => sum + inv.total, 0),
-    [invoices]
-  );
-
-  const monthlyData = useMemo(() => 
-    invoices.reduce((acc, inv) => {
-    const month = new Date(inv.createdAt).toLocaleString("en-IN", {
-      month: "short",
-    });
-    const existing = acc.find((item) => item.month === month);
+const monthlyData = useMemo(() =>
+  (invoices || []).reduce((acc, inv) => {
+    const month = new Date(inv.createdAt).toLocaleString('en-IN', { month: 'short' })
+    const existing = acc.find(item => item.month === month)
     if (existing) {
-      if (inv.status === "Paid") existing.earned += inv.total;
-      if (inv.status === "Sent") existing.pending += inv.total;
-      if (inv.status === "Overdue") existing.overdue += inv.total;
-      existing.count += 1;
+      if (inv.status === 'Paid') existing.earned += inv.total
+      if (inv.status === 'Sent') existing.pending += inv.total
+      if (inv.status === 'Overdue') existing.overdue += inv.total
     } else {
       acc.push({
         month,
-        earned: inv.status === "Paid" ? inv.total : 0,
-        pending: inv.status === "Sent" ? inv.total : 0,
-        overdue: inv.status === "Overdue" ? inv.total : 0,
-        count: 1,
-      });
+        earned: inv.status === 'Paid' ? inv.total : 0,
+        pending: inv.status === 'Sent' ? inv.total : 0,
+        overdue: inv.status === 'Overdue' ? inv.total : 0,
+      })
     }
-    return acc;
-  }, []),
-  [invoices]);
+    return acc
+  }, [])
+, [invoices])
 
-  if (loading) return <div className="loading">Loading...</div>;
+  if (loadingInvoices || !invoices) return <div className='loading'>Loading...</div>
 
-  const isNewUser = clients.length === 0 && invoices.length === 0
+  const isNewUser = (clients || []).length === 0 && (invoices || []).length === 0
 
 if (isNewUser) {
   return (

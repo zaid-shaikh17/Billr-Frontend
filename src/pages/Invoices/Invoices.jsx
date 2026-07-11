@@ -2,9 +2,8 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { useAuth } from "../../context/AuthContext";
+import { useData } from "../../context/DataContext";
 import {
-  fetchInvoices,
-  fetchClients,
   createInvoice,
   updateInvoiceStatus,
   editInvoice,
@@ -31,9 +30,7 @@ const emptyForm = {
 const Invoices = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [invoices, setInvoices] = useState([]);
-  const [clients, setClients] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { invoices, setInvoices, clients, loadInvoices, loadClients, loadingInvoices } = useData()
   const [showModal, setShowModal] = useState(false);
   const [showDetail, setShowDetail] = useState(null);
   const [formData, setFormData] = useState(emptyForm);
@@ -42,28 +39,11 @@ const Invoices = () => {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
 
-  useEffect(() => {
-    if (!user) {
-      navigate("/login");
-      return;
-    }
-    loadData();
-  }, [user]);
-
-  const loadData = useCallback(async () => {
-    try {
-      const [invRes, cliRes] = await Promise.all([
-        fetchInvoices(),
-        fetchClients(),
-      ]);
-      if (invRes.data.success) setInvoices(invRes.data.invoices);
-      if (cliRes.data.success) setClients(cliRes.data.clients);
-    } catch (error) {
-      toast.error("Failed to load data");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+useEffect(() => {
+  if (!user) return
+  loadInvoices()
+  loadClients()
+}, [user])
 
   const handleItemChange = (index, field, value) => {
     const updated = [...formData.items];
@@ -177,16 +157,17 @@ const handleSubmit = async (e) => {
     setEditingInvoice(null);
   };
 
-  const filtered = useMemo(() => 
-  invoices.filter((inv) => {
-    const matchSearch =
-      inv.invoiceNumber.toLowerCase().includes(search.toLowerCase()) ||
-      inv.clientId?.name?.toLowerCase().includes(search.toLowerCase());
-    const matchStatus = statusFilter === "All" || inv.status === statusFilter;
-    return matchSearch && matchStatus;
-  }), [invoices, search, statusFilter]);
+  const filtered = useMemo(() =>
+    (invoices || []).filter(inv => {
+      const matchSearch =
+        inv.invoiceNumber.toLowerCase().includes(search.toLowerCase()) ||
+        inv.clientId?.name?.toLowerCase().includes(search.toLowerCase())
+      const matchStatus = statusFilter === 'All' || inv.status === statusFilter
+      return matchSearch && matchStatus
+    })
+  , [invoices, search, statusFilter])
 
-  if (loading) return <div className="loading">Loading...</div>;
+  if (loadingInvoices || !invoices) return <div className='loading'>Loading...</div>
 
   return (  
     <div className="invoices-page">

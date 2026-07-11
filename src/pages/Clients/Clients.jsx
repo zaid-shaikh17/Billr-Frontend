@@ -2,8 +2,8 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { useAuth } from "../../context/AuthContext";
+import { useData } from "../../context/DataContext";
 import {
-  fetchClients,
   createClient,
   updateClient,
   removeClient,
@@ -15,33 +15,17 @@ const emptyForm = { name: "", email: "", phone: "", company: "", notes: "" };
 const Clients = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [clients, setClients] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { clients, setClients, loadClients, loadingClients } = useData()
   const [showModal, setShowModal] = useState(false);
   const [editingClient, setEditingClient] = useState(null);
   const [formData, setFormData] = useState(emptyForm);
   const [search, setSearch] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-
-  useEffect(() => {
-    if (!user) {
-      navigate("/login");
-      return;
-    }
-    loadClients();
-  }, [user]);
-
-  const loadClients =useCallback(async () => {
-    try {
-      const { data } = await fetchClients();
-      if (data.success) setClients(data.clients);
-    } catch (error) {
-      toast.error("Failed to load clients");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+useEffect(() => {
+  if (!user) return
+  loadClients()
+}, [user])
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -105,15 +89,15 @@ const Clients = () => {
     setFormData(emptyForm);
   };
 
-  const filtered = useMemo(() => 
-  clients.filter(
-    (c) =>
-      c.name.toLowerCase().includes(search.toLowerCase()) ||
-      c.email.toLowerCase().includes(search.toLowerCase()) ||
-      c.company.toLowerCase().includes(search.toLowerCase()),
-  ), [clients, search]);
+const filtered = useMemo(() =>
+  (clients || []).filter(c =>
+    c.name.toLowerCase().includes(search.toLowerCase()) ||
+    c.email.toLowerCase().includes(search.toLowerCase()) ||
+    c.company.toLowerCase().includes(search.toLowerCase())
+  )
+, [clients, search])
 
-  if (loading) return <div className="loading">Loading...</div>;
+if (loadingClients || !clients) return <div className='loading'>Loading...</div>
 
   return (
     <>
