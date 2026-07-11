@@ -115,9 +115,9 @@ npm run dev
 ```
 Billr-Frontend/
 ├── src/
-│   ├── components/     # Sidebar, ProtectedRoute
-│   ├── context/        # AuthContext
-│   ├── pages/          # Dashboard, Clients, Invoices, Login, Register
+│   ├── components/     # Sidebar, Layout  
+│   ├── context/        # AuthContext, DataContext
+│   ├── pages/          # Dashboard, Clients, ClientDetail, Invoices, Login, Register
 │   ├── services/       # api.js — all axios calls
 │   ├── styles/         # Shared CSS
 │   └── utils/          # helpers.js — formatCurrency, formatDate
@@ -161,4 +161,4 @@ Billr-Backend/
 
 ---
 
-*Built as a real-world project to solve freelancer invoicing pain. Open to fresher MERN-stack roles and internships.*
+*Built as a real-world project to solve freelancer invoicing pain. Open to fresher MERN-stack or Front-end roles and internships.*
